@@ -8,10 +8,9 @@ findSubCmds() {
   local cmd=$1
   local subcmds=""
   for dir in ${PATH//:/ }; do
-    subcmd=$(find $dir -name "$cmd-*" 2> /dev/null | tr -d ' ')
-    [[ -n "$subcmd" ]] && subcmds="$subcmds $(basename $subcmd)"
+    subcmds="$subcmds $(find $dir -name "$cmd-*" 2> /dev/null)"
   done
-  echo "$subcmds" | tr ' ' '\n' | sort | uniq
+  echo "$subcmds" | tr ' ' '\n' | sort | uniq | xargs -L1 basename
 }
 
 version="0.0.1"
