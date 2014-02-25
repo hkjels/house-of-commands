@@ -15,8 +15,8 @@ usage() {
 
   Options:
 
-    -h, --help        output usage information
-    -V, --version     output version number
+    -h, --help          output usage information
+    -V, --version       output version number
 
 EOT
 }
@@ -49,7 +49,11 @@ createSample(){
 while test $# -ne 0; do
   arg=$1; shift
   case $arg in
-    --description)
+    __shortusage)
+      echo "$cmd <name> [path]"
+      exit 0
+      ;;
+    __description)
       echo "create a new house"
       exit 0
       ;;

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+version="0.0.2"
+cmd=$(basename $0)
+
 #
 # Find sub-commands
 #
 
 findSubCmds() {
-  local cmd=$1
   local subcmds=""
   for dir in ${PATH//:/ }; do
     subcmds="$subcmds $(find $dir -name "$cmd-*" 2> /dev/null)"
@@ -13,25 +15,33 @@ findSubCmds() {
   echo "$subcmds" | tr ' ' '\n' | sort | uniq | xargs -L1 basename
 }
 
-version="0.0.2"
-cmd=$(basename $0)
+#
+# List sub-commands
+#
+
+listSubCmds(){
+  local subcmds=$(findSubCmds)
+  for subcmd in $subcmds; do
+    local shortusage=$($subcmd __shortusage)
+    [[ -z "$shortusage" ]] && shortusage="$subcmd"
+    shortusage=${shortusage/$cmd-/}
+    printf "%-3s %-25s %s\n" '' "$shortusage" "$($subcmd __description)"
+  done
+}
 
 #
 # Output usage
 #
 
 usage() {
-  local subcmds=$(findSubCmds $cmd)
   cat << EOT
 
   Usage: $cmd command [options]
 
   Commands:
 
-     help <command>     output usage for a specific command
-$(for subcmd in $subcmds; do
-  printf "%-4s %-18s %s\n" "" $subcmd "$($subcmd --description)";
-done)
+    help <command>            output usage for a specific command
+$(listSubCmds)
 
   Options:
 
@@ -57,11 +67,12 @@ missingCmd() {
 #
 
 args=""
+subcmd=""
 while test $# -ne 0; do
   arg=$1; shift
   case $arg in
     help)
-      [ -n $1 ] && cmd="$cmd-$1"; shift
+      [ -n $1 ] && subcmd="$cmd-$1"; shift
       args="--help"
       break;
       ;;
@@ -74,7 +85,7 @@ while test $# -ne 0; do
       exit 0
       ;;
     *)
-      cmd="$cmd-$arg"
+      subcmd="$cmd-$arg"
       args="$args $@"; shift
       break;
       ;;
@@ -85,7 +96,7 @@ done
 # Sub-command
 #
 
-$cmd $args 2> /dev/null
+$subcmd $args 2> /dev/null
 if [[ $? == 127 ]]; then
   missingCmd "$cmd"
   exit $?

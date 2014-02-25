@@ -14,7 +14,6 @@ usage() {
   Options:
 
     -h, --help          output usage information
-        --description   output short description
 
 EOT
 }
@@ -26,16 +25,12 @@ EOT
 while test $# -ne 0; do
   arg=$1; shift
   case $arg in
-    --description)
+    __description)
       echo "sample interface for a house"
       exit 0
       ;;
     -h|--help)
       usage
-      exit 0
-      ;;
-    *)
-      echo "The options of this interface are the ones required by a house."
       exit 0
       ;;
   esac
