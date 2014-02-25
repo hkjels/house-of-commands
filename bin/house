@@ -13,7 +13,7 @@ findSubCmds() {
   echo "$subcmds" | tr ' ' '\n' | sort | uniq | xargs -L1 basename
 }
 
-version="0.0.1"
+version="0.0.2"
 cmd=$(basename $0)
 
 #
@@ -28,8 +28,10 @@ usage() {
 
   Commands:
 
-    help <command>    output usage for a specific command
-    $(for subcmd in $subcmds; do echo "$subcmd       $($subcmd --description)"; done)
+     help <command>     output usage for a specific command
+$(for subcmd in $subcmds; do
+  printf "%-4s %-18s %s\n" "" $subcmd "$($subcmd --description)";
+done)
 
   Options:
 
