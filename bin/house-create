@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+version="0.0.1"
+cmd=$(basename $0)
+housepath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+#
+# Output usage
+#
+
+usage() {
+  cat << EOT
+
+  Usage: $cmd <name> [path]
+
+  Options:
+
+    -h, --help        output usage information
+    -V, --version     output version number
+
+EOT
+}
+
+#
+# Create house
+#
+
+createHouse(){
+  local name=$1
+  local path=$2
+  cp -a "$housepath/house" "$path/$name"
+  createSample $name $path
+}
+
+#
+# Create sample
+#
+
+createSample(){
+  local name=$1
+  local path=$2
+  cp "$housepath/house-sample" "$path/$name-sample"
+}
+
+#
+# Parse arguments
+#
+
+while test $# -ne 0; do
+  arg=$1; shift
+  case $arg in
+    --description)
+      echo "create a new house"
+      exit 0
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -V|--version)
+      echo "$version"
+      exit 0
+      ;;
+    *)
+      name=$arg
+      if [[ -n $1 ]]; then
+        path=$1
+      else
+        path=$(pwd)
+      fi
+      mkdir -p $path
+      createHouse $name $path
+      break
+      ;;
+  esac
+done
+
