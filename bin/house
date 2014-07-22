@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version="0.0.3"
+version="0.0.4"
 cmd=$(basename $0)
 
 #
@@ -96,9 +96,10 @@ done
 # Sub-command
 #
 
-$subcmd $args 2> /dev/null
-if [[ $? == 127 ]]; then
-  missingCmd "$cmd"
+if [[ $($subcmd 2>&1) =~ "command not found" ]]; then
+  missingCmd "${subcmd##*\-}"
   exit $?
 fi
+
+$subcmd $args
 
