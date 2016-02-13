@@ -1,12 +1,12 @@
 
-House of commands
+House of Commands
 =================
 
 Extensible CLI, much like the well known `git`-command.
-Say you create a "house" named `pizza`. Then pizza will redirect
-all commands that begin with pizza to `pizza-[cmd]` more or less.
-So `pizza order --cheese --ham` would be redirected to
-`pizza-order --cheese --ham` :pizza:
+Say you create a "house" named `pizza` and a command named `order`.
+That would be in the file `pizza-order`, but you could write it as
+`pizza order` instead. So `pizza order --cheese --ham` would be
+redirected to `pizza-order --cheese --ham` :pizza:
 
 ## Installation
 
